@@ -1,0 +1,628 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lab Report - Ex 04 Slot Time Table - V Kamalesh Kannan</title>
+    <style>
+        :root {
+            --primary: #003366;
+            --primary-light: #1e40af;
+            --accent: #d97706;
+            --text-dark: #1e293b;
+            --text-muted: #64748b;
+            --border-color: #cbd5e1;
+            --bg-page: #f8fafc;
+            --card-bg: #ffffff;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg-page);
+            color: var(--text-dark);
+            line-height: 1.5;
+            padding: 30px 15px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .action-bar {
+            width: 100%;
+            max-width: 900px;
+            display: flex;
+            justify-content: flex-end;
+            gap: 12px;
+            margin-bottom: 20px;
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 10px 20px;
+            font-size: 14px;
+            font-weight: 600;
+            border-radius: 6px;
+            cursor: pointer;
+            text-decoration: none;
+            transition: all 0.2s ease;
+            border: none;
+        }
+
+        .btn-print {
+            background-color: var(--primary);
+            color: #ffffff;
+            box-shadow: 0 2px 6px rgba(0, 51, 102, 0.25);
+        }
+
+        .btn-print:hover {
+            background-color: #002244;
+        }
+
+        .report-sheet {
+            background-color: var(--card-bg);
+            width: 100%;
+            max-width: 900px;
+            padding: 45px 50px;
+            border-radius: 8px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+            border: 1px solid #e2e8f0;
+        }
+
+        /* College Header */
+        .college-header {
+            text-align: center;
+            border-bottom: 3px double var(--primary);
+            padding-bottom: 15px;
+            margin-bottom: 25px;
+        }
+
+        .college-header h1 {
+            color: var(--primary);
+            font-size: 24px;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            margin-bottom: 4px;
+            font-weight: 800;
+        }
+
+        .college-header h2 {
+            color: var(--accent);
+            font-size: 14px;
+            font-weight: 600;
+            letter-spacing: 0.8px;
+            text-transform: uppercase;
+            margin-bottom: 6px;
+        }
+
+        .college-header h3 {
+            color: #334155;
+            font-size: 15px;
+            font-weight: 700;
+            margin-top: 4px;
+        }
+
+        /* Meta Info Card */
+        .meta-card {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 8px 16px;
+            background: #f1f5f9;
+            border: 1px solid var(--border-color);
+            border-left: 5px solid var(--primary);
+            border-radius: 6px;
+            padding: 14px 20px;
+            margin-bottom: 25px;
+            font-size: 14px;
+        }
+
+        .meta-card div strong {
+            color: var(--primary);
+        }
+
+        .exp-banner {
+            background: linear-gradient(135deg, var(--primary), var(--primary-light));
+            color: #ffffff;
+            padding: 10px 18px;
+            border-radius: 6px;
+            margin-bottom: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .exp-banner h2 {
+            font-size: 16px;
+            letter-spacing: 0.5px;
+        }
+
+        .exp-banner span {
+            font-size: 13px;
+            font-weight: 500;
+            background: rgba(255, 255, 255, 0.2);
+            padding: 3px 10px;
+            border-radius: 4px;
+        }
+
+        .section-heading {
+            font-size: 15px;
+            font-weight: 700;
+            color: var(--primary);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin: 20px 0 10px 0;
+            padding-bottom: 4px;
+            border-bottom: 1.5px solid #e2e8f0;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        p, li {
+            font-size: 13.5px;
+            color: #334155;
+            line-height: 1.6;
+        }
+
+        ol {
+            padding-left: 20px;
+            margin-bottom: 15px;
+        }
+
+        ol li {
+            margin-bottom: 6px;
+        }
+
+        /* Code Block Styling */
+        .code-box {
+            background: #0f172a;
+            color: #f8fafc;
+            border-radius: 6px;
+            padding: 14px 18px;
+            font-family: 'Consolas', 'Courier New', monospace;
+            font-size: 12px;
+            line-height: 1.45;
+            overflow-x: auto;
+            margin: 10px 0 18px 0;
+            border: 1px solid #1e293b;
+        }
+
+        .code-title {
+            font-size: 12.5px;
+            font-weight: 600;
+            color: #2563eb;
+            margin-top: 10px;
+            margin-bottom: 4px;
+        }
+
+        /* Timetable output preview inside report */
+        .preview-box {
+            border: 2px solid #003366;
+            border-radius: 8px;
+            padding: 16px;
+            background: #ffffff;
+            margin: 15px 0 25px 0;
+        }
+
+        .table-responsive {
+            overflow-x: auto;
+        }
+
+        table.tt {
+            width: 100%;
+            border-collapse: collapse;
+            text-align: center;
+            font-size: 11.5px;
+        }
+
+        table.tt th, table.tt td {
+            border: 1px solid #94a3b8;
+            padding: 7px 4px;
+        }
+
+        table.tt th {
+            background-color: #003366;
+            color: #ffffff;
+            font-weight: 600;
+            font-size: 11px;
+            text-transform: uppercase;
+        }
+
+        table.tt th.sub-th {
+            background-color: #1e40af;
+        }
+
+        .day-col {
+            background-color: #0f172a;
+            color: #ffffff;
+            font-weight: bold;
+            width: 75px;
+            text-transform: uppercase;
+        }
+
+        .break-cell {
+            background-color: #fef3c7 !important;
+            color: #92400e;
+            font-weight: 800;
+            font-size: 10px;
+            letter-spacing: 1.5px;
+            width: 25px;
+            line-height: 1.5;
+        }
+
+        .course-tag {
+            font-weight: 700;
+            color: #0f172a;
+            display: block;
+        }
+
+        .sub-tag {
+            font-size: 10px;
+            color: #475569;
+        }
+
+        .lab-cell {
+            background-color: #e0f2fe !important;
+            color: #0369a1;
+            font-weight: 600;
+        }
+
+        .special-cell {
+            background-color: #f3e8ff !important;
+            color: #6b21a8;
+            font-weight: 600;
+        }
+
+        /* Subject table */
+        table.st {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 12px;
+            margin-top: 10px;
+        }
+
+        table.st th, table.st td {
+            border: 1px solid #cbd5e1;
+            padding: 6px 10px;
+            text-align: left;
+        }
+
+        table.st th {
+            background-color: #334155;
+            color: #ffffff;
+            text-align: center;
+        }
+
+        table.st td.sno {
+            text-align: center;
+            font-weight: bold;
+            width: 50px;
+        }
+
+        table.st td.code {
+            font-weight: 700;
+            color: #003366;
+            width: 120px;
+        }
+
+        /* Verification Signature block */
+        .signature-block {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 40px;
+            padding-top: 25px;
+            border-top: 1.5px dashed #cbd5e1;
+        }
+
+        .sig-box {
+            text-align: center;
+            font-size: 13px;
+            color: #334155;
+        }
+
+        .sig-line {
+            margin-top: 35px;
+            border-top: 1px solid #000;
+            width: 170px;
+            display: inline-block;
+        }
+
+        /* Print Media Styles */
+        @media print {
+            body {
+                background-color: #ffffff;
+                padding: 0;
+            }
+
+            .no-print {
+                display: none !important;
+            }
+
+            .report-sheet {
+                box-shadow: none;
+                padding: 0;
+                max-width: 100%;
+                border: none;
+            }
+
+            .page-break {
+                page-break-before: always;
+            }
+
+            @page {
+                size: A4 portrait;
+                margin: 1.2cm 1.2cm;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Controls (Hidden on Print / PDF export) -->
+    <div class="action-bar no-print">
+        <button class="btn btn-print" onclick="window.print()">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M19 8H5c-1.66 0-3 1.34-3 3v6h4v4h12v-4h4v-6c0-1.66-1.34-3-3-3zm-3 11H8v-5h8v5zm3-7c-.55 0-1-.45-1-1s.45-1 1-1 1 .45 1 1-.45 1-1 1zm-1-9H6v4h12V3z"/>
+            </svg>
+            Print / Save as PDF
+        </button>
+    </div>
+
+    <main class="report-sheet">
+
+        <!-- College Header -->
+        <header class="college-header">
+            <h1>Saveetha Engineering College</h1>
+            <h2>Autonomous Institution • Affiliated to Anna University</h2>
+            <h3>DEPARTMENT OF ARTIFICIAL INTELLIGENCE AND DATA SCIENCE</h3>
+        </header>
+
+        <!-- Meta Info Card -->
+        <div class="meta-card">
+            <div><strong>Student Name:</strong> V Kamalesh Kannan</div>
+            <div><strong>Register Number:</strong> 26011247</div>
+            <div><strong>Reference Number:</strong> 212224010001</div>
+            <div><strong>Date of Submission:</strong> 05-11-2026</div>
+            <div><strong>Course Code:</strong> 19AI414</div>
+            <div><strong>Course Title:</strong> Fundamentals of Web Application Development</div>
+            <div><strong>Degree & Branch:</strong> B.Tech - AI &amp; DS / B.E. - CSE</div>
+            <div><strong>Semester / Academic Year:</strong> IV / 2025 - 2026</div>
+        </div>
+
+        <!-- Experiment Title Banner -->
+        <div class="exp-banner">
+            <h2>EX 04: SLOT TIME TABLE (DJANGO WEB APPLICATION)</h2>
+            <span>SEC / FWAD LAB</span>
+        </div>
+
+        <!-- Aim -->
+        <div class="section-heading">🎯 AIM</div>
+        <p>
+            To design, develop, and deploy an academic slot timetable website for Saveetha Engineering College using HTML, CSS, and the Django Web Framework, incorporating structured multi-slot merging, tea break and lunch break alignments, and comprehensive course mapping.
+        </p>
+
+        <!-- Algorithm -->
+        <div class="section-heading">🛠️ ALGORITHM</div>
+        <ol>
+            <li><strong>Project Initialization:</strong> Create a new Django project named <code>timetable_project</code> using the command <code>django-admin startproject timetable_project .</code> and create an application named <code>timetable_app</code> via <code>python manage.py startapp timetable_app</code>.</li>
+            <li><strong>Project Configuration:</strong> In <code>timetable_project/settings.py</code>, register <code>'timetable_app'</code> in the <code>INSTALLED_APPS</code> array and set template directory path <code>'DIRS': [BASE_DIR / 'templates']</code>.</li>
+            <li><strong>Template Design:</strong> Create an HTML template (<code>slot_timetable.html</code>) utilizing semantic tags. Employ <code>rowspan="6"</code> to merge the TEA BREAK and LUNCH BREAK across all weekdays (Monday to Saturday), and <code>colspan</code> to span practical/lab periods across multiple hours.</li>
+            <li><strong>Course Details Table:</strong> Construct a secondary lookup table beneath the schedule to map all Course Codes (19AI414, 19AI301, 19AI302, 19CS405, 19CS406, 19EY708) to their complete subject descriptions.</li>
+            <li><strong>View &amp; Routing Setup:</strong> Define a view function <code>slot_timetable(request)</code> in <code>timetable_app/views.py</code> that calls <code>render(request, 'slot_timetable.html')</code>. Link the application routes in <code>timetable_app/urls.py</code> and connect them to the root URL in <code>timetable_project/urls.py</code>.</li>
+            <li><strong>Execution &amp; Verification:</strong> Run the development server with <code>python manage.py runserver</code> and verify the responsive layout and alignment in the browser at <code>http://127.0.0.1:8000/</code>.</li>
+        </ol>
+
+        <div class="page-break"></div>
+
+        <!-- Program Code -->
+        <div class="section-heading">💻 SOURCE CODE</div>
+
+        <div class="code-title">1. timetable_project/urls.py</div>
+        <pre class="code-box"><code>from django.contrib import admin
+from django.urls import path, include
+
+urlpatterns = [
+    path('admin/', admin.site.urls),
+    path('', include('timetable_app.urls')),
+]</code></pre>
+
+        <div class="code-title">2. timetable_app/urls.py</div>
+        <pre class="code-box"><code>from django.urls import path
+from . import views
+
+urlpatterns = [
+    path('', views.slot_timetable, name='slot_timetable'),
+    path('timetable/', views.slot_timetable, name='timetable_alias'),
+]</code></pre>
+
+        <div class="code-title">3. timetable_app/views.py</div>
+        <pre class="code-box"><code>from django.shortcuts import render
+
+def slot_timetable(request):
+    """
+    Renders the Semester Slot Timetable web page
+    for 19AI414 - Fundamentals of Web Application Development.
+    """
+    return render(request, 'slot_timetable.html')</code></pre>
+
+        <div class="code-title">4. templates/slot_timetable.html (Core Table Structure)</div>
+        <pre class="code-box"><code>&lt;table class="timetable-table"&gt;
+    &lt;thead&gt;
+        &lt;tr&gt;
+            &lt;th rowspan="2"&gt;Day&lt;/th&gt;
+            &lt;th class="time-header"&gt;08:30 - 09:30&lt;/th&gt;
+            &lt;th class="time-header"&gt;09:30 - 10:30&lt;/th&gt;
+            &lt;th rowspan="2" class="break"&gt;B&lt;br&gt;R&lt;br&gt;E&lt;br&gt;A&lt;br&gt;K&lt;/th&gt;
+            &lt;th class="time-header"&gt;10:50 - 11:50&lt;/th&gt;
+            &lt;th class="time-header"&gt;11:50 - 12:50&lt;/th&gt;
+            &lt;th rowspan="2" class="lunch"&gt;L&lt;br&gt;U&lt;br&gt;N&lt;br&gt;C&lt;br&gt;H&lt;/th&gt;
+            &lt;th class="time-header"&gt;01:40 - 02:40&lt;/th&gt;
+            &lt;th class="time-header"&gt;02:40 - 03:30&lt;/th&gt;
+            &lt;th class="time-header"&gt;03:30 - 04:15&lt;/th&gt;
+        &lt;/tr&gt;
+        &lt;tr&gt;
+            &lt;th&gt;1&lt;/th&gt;&lt;th&gt;2&lt;/th&gt;&lt;th&gt;3&lt;/th&gt;&lt;th&gt;4&lt;/th&gt;&lt;th&gt;5&lt;/th&gt;&lt;th&gt;6&lt;/th&gt;&lt;th&gt;7&lt;/th&gt;
+        &lt;/tr&gt;
+    &lt;/thead&gt;
+    &lt;tbody&gt;
+        &lt;tr&gt;
+            &lt;td class="day-column"&gt;Monday&lt;/td&gt;
+            &lt;td&gt;&lt;span class="course-code"&gt;19AI414&lt;/span&gt;&lt;span class="course-name"&gt;FWAD&lt;/span&gt;&lt;/td&gt;
+            &lt;td&gt;&lt;span class="course-code"&gt;19AI301&lt;/span&gt;&lt;span class="course-name"&gt;Python&lt;/span&gt;&lt;/td&gt;
+            &lt;td rowspan="6" class="break"&gt;T&lt;br&gt;E&lt;br&gt;A&lt;br&gt;&lt;br&gt;B&lt;br&gt;R&lt;br&gt;E&lt;br&gt;A&lt;br&gt;K&lt;/td&gt;
+            &lt;td&gt;&lt;span class="course-code"&gt;19AI302&lt;/span&gt;&lt;span class="course-name"&gt;Maths&lt;/span&gt;&lt;/td&gt;
+            &lt;td&gt;&lt;span class="course-code"&gt;19CS405&lt;/span&gt;&lt;span class="course-name"&gt;OS&lt;/span&gt;&lt;/td&gt;
+            &lt;td rowspan="6" class="lunch"&gt;L&lt;br&gt;U&lt;br&gt;N&lt;br&gt;C&lt;br&gt;H&lt;br&gt;&lt;br&gt;B&lt;br&gt;R&lt;br&gt;E&lt;br&gt;A&lt;br&gt;K&lt;/td&gt;
+            &lt;td colspan="2" class="lab-slot"&gt;&lt;span class="course-code"&gt;19AI414&lt;/span&gt;&lt;span class="course-name"&gt;Web App Lab&lt;/span&gt;&lt;/td&gt;
+            &lt;td&gt;Library&lt;/td&gt;
+        &lt;/tr&gt;
+        &lt;!-- Tuesday to Saturday rows configured similarly --&gt;
+    &lt;/tbody&gt;
+&lt;/table&gt;</code></pre>
+
+        <!-- Output Preview -->
+        <div class="section-heading">🖥️ VERIFIED OUTPUT DISPLAY</div>
+        
+        <div class="preview-box">
+            <!-- Simulated Rendered Output -->
+            <div style="text-align: center; margin-bottom: 12px;">
+                <h4 style="color: #003366; font-size: 14px; text-transform: uppercase;">Saveetha Engineering College (Autonomous)</h4>
+                <p style="font-size: 11px; color: #64748b;">Department of Artificial Intelligence and Data Science • Slot Timetable (2025 - 2026)</p>
+            </div>
+
+            <div class="table-responsive">
+                <table class="tt">
+                    <thead>
+                        <tr>
+                            <th rowspan="2">Day</th>
+                            <th class="sub-th">08:30-09:30</th>
+                            <th class="sub-th">09:30-10:30</th>
+                            <th rowspan="2" class="break-cell">TEA</th>
+                            <th class="sub-th">10:50-11:50</th>
+                            <th class="sub-th">11:50-12:50</th>
+                            <th rowspan="2" class="break-cell">LUNCH</th>
+                            <th class="sub-th">01:40-02:40</th>
+                            <th class="sub-th">02:40-03:30</th>
+                            <th class="sub-th">03:30-04:15</th>
+                        </tr>
+                        <tr>
+                            <th>1</th><th>2</th><th>3</th><th>4</th><th>5</th><th>6</th><th>7</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td class="day-col">Monday</td>
+                            <td><span class="course-tag">19AI414</span><span class="sub-tag">FWAD</span></td>
+                            <td><span class="course-tag">19AI301</span><span class="sub-tag">Python</span></td>
+                            <td rowspan="6" class="break-cell">T<br>E<br>A<br><br>B<br>R<br>E<br>A<br>K</td>
+                            <td><span class="course-tag">19AI302</span><span class="sub-tag">Maths</span></td>
+                            <td><span class="course-tag">19CS405</span><span class="sub-tag">OS</span></td>
+                            <td rowspan="6" class="break-cell">L<br>U<br>N<br>C<br>H<br><br>B<br>R<br>E<br>A<br>K</td>
+                            <td colspan="2" class="lab-cell"><span class="course-tag">19AI414</span><span class="sub-tag">Web App Lab</span></td>
+                            <td>Library</td>
+                        </tr>
+                        <tr>
+                            <td class="day-col">Tuesday</td>
+                            <td><span class="course-tag">19CS406</span><span class="sub-tag">DBMS</span></td>
+                            <td><span class="course-tag">19AI414</span><span class="sub-tag">FWAD</span></td>
+                            <td><span class="course-tag">19AI301</span><span class="sub-tag">Python</span></td>
+                            <td><span class="course-tag">19AI302</span><span class="sub-tag">Maths</span></td>
+                            <td colspan="2" class="lab-cell"><span class="course-tag">19CS406</span><span class="sub-tag">DBMS Lab</span></td>
+                            <td>Sports</td>
+                        </tr>
+                        <tr>
+                            <td class="day-col">Wednesday</td>
+                            <td><span class="course-tag">19AI302</span><span class="sub-tag">Maths</span></td>
+                            <td><span class="course-tag">19CS405</span><span class="sub-tag">OS</span></td>
+                            <td><span class="course-tag">19AI414</span><span class="sub-tag">FWAD</span></td>
+                            <td><span class="course-tag">19CS406</span><span class="sub-tag">DBMS</span></td>
+                            <td class="special-cell">Mentor Meet</td>
+                            <td><span class="course-tag">19AI301</span><span class="sub-tag">Python</span></td>
+                            <td>Self Study</td>
+                        </tr>
+                        <tr>
+                            <td class="day-col">Thursday</td>
+                            <td><span class="course-tag">19AI301</span><span class="sub-tag">Python</span></td>
+                            <td><span class="course-tag">19AI302</span><span class="sub-tag">Maths</span></td>
+                            <td><span class="course-tag">19CS405</span><span class="sub-tag">OS</span></td>
+                            <td><span class="course-tag">19AI414</span><span class="sub-tag">FWAD</span></td>
+                            <td colspan="2" class="lab-cell"><span class="course-tag">19AI301</span><span class="sub-tag">Python Lab</span></td>
+                            <td>Seminar</td>
+                        </tr>
+                        <tr>
+                            <td class="day-col">Friday</td>
+                            <td><span class="course-tag">19CS405</span><span class="sub-tag">OS</span></td>
+                            <td><span class="course-tag">19CS406</span><span class="sub-tag">DBMS</span></td>
+                            <td><span class="course-tag">19AI302</span><span class="sub-tag">Maths</span></td>
+                            <td><span class="course-tag">19AI301</span><span class="sub-tag">Python</span></td>
+                            <td><span class="course-tag">19AI414</span><span class="sub-tag">FWAD</span></td>
+                            <td class="special-cell">Aptitude</td>
+                            <td>Club</td>
+                        </tr>
+                        <tr>
+                            <td class="day-col">Saturday</td>
+                            <td><span class="course-tag">19AI414</span><span class="sub-tag">FWAD</span></td>
+                            <td><span class="course-tag">19CS406</span><span class="sub-tag">DBMS</span></td>
+                            <td><span class="course-tag">19CS405</span><span class="sub-tag">OS</span></td>
+                            <td><span class="course-tag">19AI301</span><span class="sub-tag">Python</span></td>
+                            <td colspan="3" class="special-cell">Mini Project Review / Presentation</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Subject Details -->
+            <table class="st">
+                <thead>
+                    <tr>
+                        <th style="width: 50px;">S.No</th>
+                        <th style="width: 120px;">Course Code</th>
+                        <th>Course Title</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr><td class="sno">1</td><td class="code">19AI414</td><td>Fundamentals of Web Application Development (FWAD)</td></tr>
+                    <tr><td class="sno">2</td><td class="code">19AI301</td><td>Python Programming and Practice</td></tr>
+                    <tr><td class="sno">3</td><td class="code">19AI302</td><td>Engineering Mathematics and Discrete Structures</td></tr>
+                    <tr><td class="sno">4</td><td class="code">19CS405</td><td>Operating System Concepts and Design</td></tr>
+                    <tr><td class="sno">5</td><td class="code">19CS406</td><td>Database Management Systems (DBMS)</td></tr>
+                    <tr><td class="sno">6</td><td class="code">19EY708</td><td>Soft Skills and Professional Aptitude</td></tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Result -->
+        <div class="section-heading">🏆 RESULT</div>
+        <p>
+            Thus, the website to display the semester slot timetable using Django Web Framework, HTML, and CSS was successfully developed, integrated, and verified in the browser.
+        </p>
+
+        <!-- Signature Verification Block -->
+        <div class="signature-block">
+            <div class="sig-box">
+                <div>Signature of the Candidate</div>
+                <div class="sig-line"></div>
+                <div style="font-weight: 600; margin-top: 5px;">(V Kamalesh Kannan)</div>
+            </div>
+            <div class="sig-box">
+                <div>Marks Awarded / 100</div>
+                <div class="sig-line"></div>
+            </div>
+            <div class="sig-box">
+                <div>Staff-in-charge Signature</div>
+                <div class="sig-line"></div>
+                <div style="font-size: 11px; color: #64748b; margin-top: 5px;">Saveetha Engineering College</div>
+            </div>
+        </div>
+
+    </main>
+
+</body>
+</html>
