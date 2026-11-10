@@ -6,7 +6,7 @@
 ## Reference Number: 212224010001
 ## Course Code: 19AI414
 ## Course Title: Fundamentals of Web Application Development
-## Department: Artificial Intelligence and Data Science
+## Department: Computer Science Engineering(CSE)
 ## Institution: Saveetha Engineering College (Autonomous)
 
 ---
@@ -239,14 +239,14 @@ def slot_timetable(request):
     <header class="college-header">
         <h1>Saveetha Engineering College</h1>
         <h2>Autonomous Institution • Affiliated to Anna University</h2>
-        <h3>DEPARTMENT OF ARTIFICIAL INTELLIGENCE AND DATA SCIENCE</h3>
+        <h3>DEPARTMENT OF COMPUTER SCIENCE ENGINEERING</h3>
     </header>
 
     <div class="student-info">
         <span><strong>Student Name:</strong> V Kamalesh Kannan</span>
         <span><strong>Register No:</strong> 26011247</span>
         <span><strong>Reference No:</strong> 212224010001</span>
-        <span><strong>Semester:</strong> IV (2025 - 2026)</span>
+        <span><strong>Semester:</strong> I(2026 - 2027)</span>
     </div>
 
     <h4 class="section-title">📅 Semester Slot Timetable</h4>
@@ -498,7 +498,7 @@ The timetable web page is rendered at `http://127.0.0.1:8000/`:
 ==========================================================================================
                               SAVEETHA ENGINEERING COLLEGE
                        AUTONOMOUS INSTITUTION • AFFILIATED TO ANNA UNIVERSITY
-                  DEPARTMENT OF ARTIFICIAL INTELLIGENCE AND DATA SCIENCE
+                            DEPARTMENT OF COMPUTER SCIENCE ENGINEERING
 ------------------------------------------------------------------------------------------
 Student Name: V Kamalesh Kannan   | Register No: 26011247   | Reference No: 212224010001
 ==========================================================================================
